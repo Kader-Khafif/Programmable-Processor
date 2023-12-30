@@ -1,0 +1,21 @@
+module Project(SW, KEY1, KEY0, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7, CLOCK_50, LEDG, LEDR);
+
+	input [17:0] SW;
+	input CLOCK_50;
+	input KEY1, KEY0;
+	
+	output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7;
+	output [17:0] LEDR;
+	output [8:0] LEDG;
+	
+	assign LEDR = SW;
+	
+	//Processor( Clk, Reset, IR_Out, PC_Out, State, NextState, ALU_A, ALU_B, ALU_Out);
+	Processor P1(Clk, Reset, IR_Out, PC_Out, State, NextState, ALU_A, ALU_B, ALU_Out);
+
+	//KeyFilter( Clock, In, Out, Strobe );
+	KeyFilter KEY( Clock, In, Out, Strobe );
+
+
+  
+endmodule 

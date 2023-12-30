@@ -1,0 +1,119 @@
+//Thomas Halford/Kader Khafif, TCES 330
+//Spring 2022, 05/31/2022
+//Final Project
+//Control unit module that instantiates the FSM,
+//PC, instruction memory, and instruction register
+
+module CU(Clk,Reset, ALU_s0, OutState, D_Addr, D_wr, NextState, RF_Ra_Addr, 
+							RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en, IR_Out, PC_Out);
+   input Clk;                    // System clock
+   input Reset;                  // Synchronous reset
+	
+   output reg [15:0] IR_Out;     // Instruction Register value
+   output reg [6:0] PC_Out;      // PC counter
+   
+	output [7:0] D_Addr;          // Data memory address
+   output [3:0] OutState;        // Current State for State Machine
+   output [3:0] NextState;       // Next State for State Machine
+   output [3:0] RF_Ra_Addr;      // Register file A-address
+   output [3:0] RF_Rb_Addr;      // Register file B-address
+   output [3:0] RF_W_Addr;       // Register file addr
+   output [2:0] ALU_s0;          // ALU function select
+   output D_wr;                  // Data memory write enable
+   output RF_W_en;               // Register file write enable
+	output RF_s;						// Mux select line
+	
+   wire [15:0] Q;                // Output of InstROM to be assigned to IR_Out
+  // wire [6:0] address;           // Address of location to pull from InstROM
+   wire IR_ld;                   // Enable of Instruction Register load
+   wire PC_clr;                  // Clear of PC counter
+   wire PC_inc;                  // Increment of PC counter
+	
+   // Address is PC_Out
+	//assign address = {1'b0,PC_Out[6:0]};
+	
+	// Inst Memory ROM
+	myROM R1(
+	.address(PC_Out),
+	.clock(Clk),
+	.q(Q));
+	
+	// ProgramCounter
+	//PC( Clk, Clr, Up, Addr );
+	PC stage1( Clk, PC_clr, PC_inc, PC_Out );
+
+	// InstructionRegister
+	//IR ( Load, Clk, Data, Instruction );
+	IR stage2( IR_ld, Clk, Q, IR_Out );	
+	
+	
+	// module FSM(Clk, Reset, Instruction,  ALU_s0, OutState, D_Addr, D_wr, IR_ldd, NextState, PC_Clr, 
+   // PC_Up, RF_Ra_Addr, RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en);
+	
+	FSM FSM1( Clk, Reset, IR_Out, ALU_s0, OutState, D_Addr, D_wr, IR_ld, NextState, PC_clr,
+					PC_inc, RF_Ra_Addr, RF_Rb_Addr,RF_s, RF_W_Addr, RF_W_en);
+
+					
+endmodule
+
+// Testbench
+`timescale 1ns/100ps
+module CU_tb();
+
+	logic Clk;                    // System clock
+	logic Reset;                  // Synchronous reset
+	
+	logic [15:0] IR_Out;     // Instruction Register value
+	logic [6:0] PC_Out;      // PC counter
+   
+	logic [7:0] D_Addr;          // Data memory address
+	logic [3:0] OutState;        // Current State for State Machine
+	logic [3:0] NextState;       // Next State for State Machine
+	logic [3:0] RF_Ra_Addr;      // Register file A-address
+	logic [3:0] RF_Rb_Addr;      // Register file B-address
+	logic [2:0] ALU_s0;           // ALU function select
+	logic D_wr;                  // Data memory write enable
+	logic RF_W_Addr;               // Register file addr
+	logic RF_W_en;               // Register file write enable
+	logic RF_s;			// Mux select line
+	//event k; // Declaring an event k
+
+	// active high Reset
+	// CU(Clk, Reset, ALU_s0, OutState, D_Addr, D_wr, NextState, RF_Ra_Addr, 
+	//		RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en, IR_Out, PC_Out);
+	CU CU1(Clk, Reset, ALU_s0, OutState, D_Addr, D_wr, NextState, RF_Ra_Addr, 
+			RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en, IR_Out, PC_Out);
+
+
+	//Creating a 50 MHz clock
+	always begin 
+		Clk = 1; #10;
+		Clk = 0;
+		//-> k; // the event will happen at the rising clock
+		#10;
+	end
+
+	initial begin
+	Reset = 1; #20;
+	Reset = 0; #1200;
+	//Reset = 1; #40;
+	//Reset = 0; #400;
+	Reset = 1; #100;
+	Reset = 0; #200;
+		
+/*		
+	wait (k.triggered) 
+	 #1; 
+	 assert ( OutState == 0) 
+	 #1;
+*/
+    $stop;
+  end
+  
+  initial
+//CU1(Clk, Reset, ALU_s0, OutState, D_Addr, D_wr, NextState, RF_Ra_Addr, 
+//			RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en, IR_Out, PC_Out);
+    //$monitor($time ,,,Clk,,,ALU_s0,,,OutState,,,D_Addr,,,D_wr,,,IR_ld,,NextState,,,PC_Clr,,,PC_Up,,,RF_Ra_Addr,,,RF_Rb_Addr,,,RF_s,,,RF_W_Addr,,,RF_W_en);
+$monitor($time,,,"Rest",Reset,,,"ALU",ALU_s0,,,"OutState",OutState,,,"D_Addr",D_Addr,,,"Dwr",D_wr,,,"IROut",IR_Out,,"Next",NextState,,,"PCOut",PC_Out,,,"ra",RF_Ra_Addr,,,"rb",RF_Rb_Addr,,,"RFs",RF_s,,,"RFWaddr=",RF_W_Addr,,,"RFWen=",RF_W_en);
+ 
+endmodule

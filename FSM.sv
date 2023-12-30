@@ -1,0 +1,239 @@
+/*********************************
+** 	TCES 330 digital design	**
+**		Kader khafif		**
+** 	Claas Project: FSM		**
+** 	State Machine		**
+**					**
+*********************************/
+
+// This module defines the State Machine FSM
+
+
+module FSM(Clk, Reset, Instruction,  ALU_s0, OutState, D_Addr, D_wr, IR_ld, NextState, PC_Clr, 
+    PC_Up, RF_Ra_Addr, RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en);
+                     
+   input [15:0] Instruction;                 // Instruction Register value
+   input Clk;                       // System clock
+   input Reset;                     // Synchronous reset
+   
+   output logic [2:0] ALU_s0;          // ALU function select
+   output [3:0] OutState;              // Current state of the state machine
+   output logic [7:0] D_Addr;         // Data memory address
+   output logic D_wr;                 // Data memory write enable
+   output logic IR_ld;                // Enable of Instruction Register load
+   output [3:0] NextState;          // Next state of the state machine
+   output logic PC_Clr;               // Clear of PC counter
+   output logic PC_Up;               // Increment of PC counter
+   output logic [3:0] RF_Ra_Addr;      // Register file A-address
+   output logic [3:0] RF_Rb_Addr;      // Register file B-address
+   output logic RF_s;				// Mus select line
+   output logic [3:0] RF_W_Addr;              // Register file A-side write enable
+   output logic RF_W_en;              // Register file B-side write enable
+   
+   logic [3:0] InState = 3'b0, InNextState = 3'b0;   // Registers used to get State Machine Viewer to work
+   
+	assign OutState = InState;          // Assigning the State output to be the value of the InState register
+	assign NextState = InNextState;  // Assigning the NextState output to be the value of the InNextState register
+	
+   // State machine states
+	localparam		Initial = 8'h00,
+				Fetch = 8'h01,
+				Decode = 8'h02,
+				Halt = 8'h03,
+				NOOP = 8'h04,
+				LOAD_A = 8'h05,
+				LOAD_B = 8'h06,
+				STORE = 8'h07,
+				ADD = 8'h08,
+				SUB = 8'h09;	
+	  
+	always_comb begin
+		D_wr = 1'b0;
+		IR_ld = 1'b0;
+		PC_Clr = 1'b0;
+		PC_Up = 1'b0;
+		RF_W_en = 1'b0;
+		RF_s = 1'b0;
+		ALU_s0 = 3'b0;
+		RF_Ra_Addr = 4'b0;
+		RF_Rb_Addr = 4'b0;
+		D_Addr = 8'b0;
+		RF_W_Addr = 4'b0;
+		
+		case (InState)
+			Initial: begin             // Initial State
+				PC_Clr = 1'b1;
+				InNextState = Fetch;
+			end
+			
+			Fetch: begin               // Fetch State
+				PC_Up = 1'b1;
+				IR_ld = 1'b1;
+				InNextState = Decode;
+			end
+			
+			Decode: begin              // Decode State
+				//PC_Up = 1'b1;
+				
+            // Assign InNextState to be the state corresponding to the value of Instruction[15:12]
+				if (Instruction[15:12] == 4'b0000)
+					InNextState = NOOP;
+				else if (Instruction[15:12] == 4'b0001)
+					InNextState = STORE;
+				else if (Instruction[15:12] == 4'b0010)
+					InNextState = LOAD_A;
+				else if (Instruction[15:12] == 4'b0011)
+					InNextState = ADD;
+				else if (Instruction[15:12] == 4'b0100)
+					InNextState = SUB;
+				else if (Instruction[15:12] == 4'b0101)
+					InNextState = Halt;
+				else
+					InNextState = Decode;
+			end
+			
+			Halt: begin                // Halt State
+				InNextState = Halt;
+			end
+			
+			NOOP: begin                // NOOP State
+				InNextState = Fetch;
+			end
+			
+			LOAD_A: begin              // LOAD_A State
+				D_Addr = Instruction[11:4];      // Data memory address becomes portion of IR that contains data memory locations
+				RF_s = 1'b1;
+				RF_W_Addr = Instruction[3:0];
+				InNextState = LOAD_B;
+			end
+			
+			LOAD_B: begin              // LOAD_B State
+				RF_s = 1'b1;         // Enable Mux select
+				RF_W_en = 1'b1;
+				D_Addr = Instruction[11:4];      // Data memory address becomes portion of Instruction that contains data memory locations
+				RF_W_Addr = Instruction[3:0];    // Register file A-address becomes portion of Instruction that contains register file locations
+				
+				InNextState = Fetch;
+			end
+			
+			STORE: begin              // STORE State
+				RF_Ra_Addr = Instruction[11:8];   // Register file A-address becomes portion of Insruction that contains register file locations
+				D_Addr = Instruction[7:0];       // Data memory address becomes portion of Instruction that contains data memory locations
+				D_wr = 1'b1;            // Enable Data memory write
+			
+				InNextState = Fetch;
+			end
+			
+			ADD: begin              // ADD State
+				RF_Ra_Addr = Instruction[11:8];   
+				RF_Rb_Addr = Instruction[7:4];    
+				ALU_s0 = 3'b001;
+				RF_W_en = 1'b1;
+				RF_W_Addr = Instruction[3:0];
+				RF_s = 0;
+				InNextState = Fetch;
+			end
+						
+			SUB: begin              // SUB State
+				RF_Ra_Addr = Instruction[11:8];
+				RF_Rb_Addr = Instruction[7:4];    
+				RF_W_en = 1'b1;         
+				ALU_s0 = 3'b010;
+				RF_W_Addr = Instruction[3:0];
+           			RF_s = 1'b0;
+				InNextState = Fetch;
+			end
+			
+			default: begin             // Default State
+				InNextState = Initial;
+			end
+		
+		endcase
+	end
+
+   // State FFS (State Register)
+	always_ff @(posedge Clk) begin
+		if (Reset)                    // If Reset is 1 then set State back to Initial
+			InState <= Initial;
+		else                          // If Reset is 0 then advance the State
+			InState <= InNextState;
+	end
+	
+endmodule 
+
+// Testbench
+`timescale 1ns/100ps
+module FSM_tb();
+
+	logic Clk, Reset;
+	logic [15:0] Instruction;
+
+	logic [2:0] ALU_s0;          // ALU function select
+	logic[3:0] OutState;              // Current state of the state machine
+	logic [7:0] D_Addr;         // Data memory address
+	logic D_wr;                 // Data memory write enable
+	logic IR_ld;                // Enable of Instruction Register load
+	logic [3:0] NextState;          // Next state of the state machine
+	logic PC_Clr;               // Clear of PC counter
+	logic PC_Up;               // Increment of PC counter
+	logic [3:0] RF_Ra_Addr;      // Register file A-address
+	logic [3:0] RF_Rb_Addr;      // Register file B-address
+	logic RF_s;				// Mus select line
+	logic [3:0]RF_W_Addr;              // Register file A-side write enable
+	logic RF_W_en;              // Register file B-side write enable
+
+
+	event k; // Declaring an event k
+
+	//Creating a 50 MHz clock
+	always begin 
+		Clk = 1; #10;
+		Clk = 0;
+		-> k; // the event will happen at the rising clock
+		#10;
+	end
+
+	// active high Reset
+	// FSM(Clk, Reset, Instruction,  ALU_s0, OutState, D_Addr, D_wr, IR_ld, NextState, PC_Clr, 
+    	//		PC_Up, RF_Ra_Addr, RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en);
+	FSM Unit1(Clk, Reset, Instruction,  ALU_s0, OutState, D_Addr, D_wr, IR_ld, NextState, PC_Clr, 
+    			PC_Up, RF_Ra_Addr, RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en);
+
+	initial begin
+	Reset = 0; 
+		// Testing Load A and B
+		Instruction = 16'b0010_00000000_0000; #40; //Load 0 0
+		Instruction = 16'b0010_00000001_0001; #40; //Load 1 1
+		// Testing ADD	
+		Instruction = 16'b0011_0000_0001_0010; #40; //ADD 0 1 2
+		//Testing STORE
+		Instruction = 16'b0001_0010_00001001; #40; //Store 2 9
+
+		Instruction = 16'b0010_00010000_0011; #40; //Load 16 3
+		Instruction = 16'b0010_00010010_0010; #40; //Load 18 2
+
+		// Testing SUB, STORE
+		Instruction = 16'b0100_0011_0010_0100; #40; //SUB 3 2 4
+		Instruction = 16'b0001_0100_0000_1000; #60; //Store 4 8
+	
+
+		// Testing NOOP
+		Instruction = 16'b0000_0000_0000_0000; #20; // NOOP
+
+		// Testing HALT
+		Instruction = 16'b0101_0000_0000_0000; #40; // HAlt
+
+/*		
+	wait (k.triggered) 
+	 #1; 
+	 assert ( OutState == 0) 
+	 #1;
+*/
+    $stop;
+  end
+  
+  initial
+    //$monitor($time ,,,Instruction,,,ALU_s0,,,OutState,,,D_Addr,,,D_wr,,,IR_ld,,NextState,,,PC_Clr,,,PC_Up,,,RF_Ra_Addr,,,RF_Rb_Addr,,,RF_s,,,RF_W_Addr,,,RF_W_en);
+$monitor($time,,,"IR=",Instruction,,,"ALU =",ALU_s0,,,"OutState=",OutState,,,"D_Addr=",D_Addr,,,"Dwr=",D_wr,,,"IRLoad=",IR_ld,,"Next=",NextState,,,PC_Clr,,,"PCUp=",PC_Up,,,"ra=",RF_Ra_Addr,,,"rb=",RF_Rb_Addr,,,RF_s,,,"RFWaddr=",RF_W_Addr,,,"RFwen=",RF_W_en);
+ 
+endmodule

@@ -1,0 +1,67 @@
+//Thomas Halford/Kader Khafif, TCES 330
+//Spring 2022, 05/31/2022
+//Final Project
+//Module that performs logic operations on two 
+//16-bit inputs and outputs a 16-bit number
+
+module ALU(A, B, Sel, Q);
+
+// This ALU has eight functions:
+// if s == 0 the output is 0
+// if s == 1 the output is A + B
+// if s == 2 the output is A - B
+// if s == 3 the output is A (pass-through)
+// if s == 4 the output is A ^ B
+// if s == 5 the output is A | B
+// if s == 6 the output is A & B
+// if s == 7 the output is A + 1;
+// if additional functions added for future expansion
+// you need to expand the selecting signal too
+
+	input [2:0] Sel; // function select
+	input [15:0] A, B; // input data
+	output logic [15:0] Q; // ALU output (result)
+
+	always @* begin
+
+	case(Sel)
+
+	3'd0 : Q = 0;
+	3'd1 : Q = A + B;
+	3'd2 : Q = A - B;
+	3'd3 : Q = A;
+	3'd4 : Q = A ^ B;
+	3'd5 : Q = A | B;
+	3'd6 : Q = A & B;
+	3'd7 : Q = A + 16'd1;
+	
+	endcase
+	
+	end
+
+endmodule
+
+module ALU_tb();
+
+	logic [2:0] Sel; // function select
+	logic [15:0] A, B; // input data
+	logic [15:0] Q; // ALU output (result)
+
+	ALU DUT(A, B, Sel, Q);
+
+	initial begin
+
+	for(int i = 0; i < 50; i++) begin 
+
+		A = $random;
+		B = $random;
+		Sel = $random;
+		#20;
+
+	end
+
+	end
+	
+	initial $monitor("Binary: A = %b \t B = %b \t Sel = %b \t Q = %b \t\t Hex: A = %h \t B = %h \t Sel = %h \t Q = %h", A, B, Sel, Q, A, B, Sel, Q);
+	
+endmodule

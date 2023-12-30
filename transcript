@@ -1,0 +1,266 @@
+# Reading pref.tcl
+# OpenFile {C:/Users/Kader/OneDrive - UW/Project fini/Project/Project/Project.sv}
+do runrtlProces.do
+# 
+# Get rid of current work lib
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# 
+# Create work library and map it to 'work'
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Modifying modelsim.ini
+# 
+# Compile Verilog
+#     All Verilog files that are part of this design should have
+#     their own "vlog" line below.
+# vlog -work work +acc +cover "./Processor.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:33 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./Processor.sv 
+# -- Compiling module Processor
+# -- Compiling module Processor_tb
+# 
+# Top level modules:
+# 	Processor_tb
+# End time: 14:29:33 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./CU.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:33 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./CU.sv 
+# -- Compiling module CU
+# -- Compiling module CU_tb
+# 
+# Top level modules:
+# 	CU_tb
+# End time: 14:29:33 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./datapath.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:33 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./datapath.sv 
+# -- Compiling module datapath
+# -- Compiling module datapath_tb
+# ** Warning: (vlog-2083) ./datapath.sv(101): Carriage return (0x0D) is not followed by a newline (0x0A).
+# 
+# Top level modules:
+# 	datapath_tb
+# End time: 14:29:33 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# vlog -work work +acc +cover "./regfile16x16a.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:33 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./regfile16x16a.sv 
+# -- Compiling module regfile16x16a
+# -- Compiling module regfile16x16a_tb
+# 
+# Top level modules:
+# 	regfile16x16a_tb
+# End time: 14:29:33 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./myROM.v"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:33 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./myROM.v 
+# -- Compiling module myROM
+# 
+# Top level modules:
+# 	myROM
+# End time: 14:29:33 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./IR.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:33 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./IR.sv 
+# -- Compiling module IR
+# -- Compiling module IR_tb
+# 
+# Top level modules:
+# 	IR_tb
+# End time: 14:29:33 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./FSM.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:34 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./FSM.sv 
+# -- Compiling module FSM
+# ** Note: (vlog-143) Recognized 1 FSM in module "FSM(verilog)".
+# -- Compiling module FSM_tb
+# 
+# Top level modules:
+# 	FSM_tb
+# End time: 14:29:34 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./Mux16w2to1.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:34 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./Mux16w2to1.sv 
+# -- Compiling module Mux16w2to1
+# -- Compiling module Mux16w2to1_tb
+# 
+# Top level modules:
+# 	Mux16w2to1_tb
+# End time: 14:29:34 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./DataMem.v"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:34 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./DataMem.v 
+# -- Compiling module DataMem
+# 
+# Top level modules:
+# 	DataMem
+# End time: 14:29:34 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -work work +acc +cover "./ALU.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:34 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./ALU.sv 
+# -- Compiling module ALU
+# ** Warning: (vlog-2083) ./ALU.sv(19): Carriage return (0x0D) is not followed by a newline (0x0A).
+# -- Compiling module ALU_tb
+# 
+# Top level modules:
+# 	ALU_tb
+# End time: 14:29:34 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# vlog -work work +acc +cover "./PC.sv"
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:29:34 on Jun 07,2022
+# vlog -reportprogress 300 -work work "+acc" "+cover" ./PC.sv 
+# -- Compiling module PC
+# 
+# Top level modules:
+# 	PC
+# End time: 14:29:34 on Jun 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# 
+# Call vsim to invoke simulator
+#     Make sure the last item on the line is the name of the
+#     testbench module you want to execute.
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cycloneive_ver -L rtl_work -L work -voptargs="+acc" -fsmdebug  Processor_tb
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cycloneive_ver -L rtl_work -L work -voptargs=""+acc"" -fsmdebug Processor_tb 
+# Start time: 14:29:35 on Jun 07,2022
+# Loading sv_std.std
+# Loading work.Processor_tb
+# Loading work.Processor
+# Loading work.datapath
+# Loading work.DataMem
+# Loading altera_mf_ver.altsyncram
+# Loading work.Mux16w2to1
+# Loading work.regfile16x16a
+# Loading work.ALU
+# Loading work.CU
+# Loading work.myROM
+# Loading work.PC
+# Loading work.IR
+# Loading work.FSM
+# Loading altera_mf_ver.altsyncram_body
+# Loading altera_mf_ver.ALTERA_DEVICE_FAMILIES
+# Loading altera_mf_ver.ALTERA_MF_MEMORY_INITIALIZATION
+# 
+# Source the wave do file
+#     This should be the file that sets up the signal window for
+#     the module you are testing.
+# do Processorwave.do
+# onerror {resume}
+# quietly WaveActivateNextPane {} 0
+# add wave -noupdate /Processor_tb/Clk
+# ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
+#           File in use by: thoma  Hostname: DESKTOP-A5H763M  ProcessID: 14032
+#           Attempting to use alternate WLF file "./wlfta89cvt".
+# ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
+#           Using alternate file: ./wlfta89cvt
+# add wave -noupdate /Processor_tb/Reset
+# add wave -noupdate /Processor_tb/IR_Out
+# add wave -noupdate /Processor_tb/PC_Out
+# add wave -noupdate /Processor_tb/State
+# add wave -noupdate /Processor_tb/NextState
+# add wave -noupdate /Processor_tb/ALU_A
+# add wave -noupdate /Processor_tb/ALU_B
+# add wave -noupdate /Processor_tb/ALU_Out
+# 
+# 
+# TreeUpdate [SetDefaultTree]
+# WaveRestoreCursors {{Cursor 1} {0 ps} 0}
+# quietly wave cursor active 0
+# configure wave -namecolwidth 150
+# configure wave -valuecolwidth 100
+# configure wave -justifyvalue left
+# configure wave -signalnamewidth 0
+# configure wave -snapdistance 10
+# configure wave -datasetprefix 0
+# configure wave -rowmargin 4
+# configure wave -childrowmargin 2
+# configure wave -gridoffset 0
+# configure wave -gridperiod 1
+# configure wave -griddelta 40
+# configure wave -timeline 0
+# configure wave -timelineunits ps
+# update
+# WaveRestoreZoom {0 ps} {1 ns}
+# 
+# Set the window types
+# view wave
+# .main_pane.wave.interior.cs.body.pw.wf
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# 
+# Run the simulation
+# run -all
+# 
+# Begin Simulation.
+# Time is 0 : Reset = 1   PC_Out = 00   IR_Out = xxxx  State = 0  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 30 : Reset = 0   PC_Out = 00   IR_Out = xxxx  State = 0  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 40 : Reset = 0   PC_Out = 00   IR_Out = xxxx  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 60 : Reset = 0   PC_Out = 01   IR_Out = 21a1  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 80 : Reset = 0   PC_Out = 01   IR_Out = 21a1  State = 5  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 100 : Reset = 0   PC_Out = 01   IR_Out = 21a1  State = 6  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 120 : Reset = 0   PC_Out = 01   IR_Out = 21a1  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 140 : Reset = 0   PC_Out = 02   IR_Out = 22b2  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 160 : Reset = 0   PC_Out = 02   IR_Out = 22b2  State = 5  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 180 : Reset = 0   PC_Out = 02   IR_Out = 22b2  State = 6  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 200 : Reset = 0   PC_Out = 02   IR_Out = 22b2  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 220 : Reset = 0   PC_Out = 03   IR_Out = 4123  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 240 : Reset = 0   PC_Out = 03   IR_Out = 4123  State = 9  ALU A = 10ac  ALU B = cc05 ALU Out = 44a7
+# Time is 260 : Reset = 0   PC_Out = 03   IR_Out = 4123  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 280 : Reset = 0   PC_Out = 04   IR_Out = 23c2  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 300 : Reset = 0   PC_Out = 04   IR_Out = 23c2  State = 5  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 320 : Reset = 0   PC_Out = 04   IR_Out = 23c2  State = 6  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 340 : Reset = 0   PC_Out = 04   IR_Out = 23c2  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 360 : Reset = 0   PC_Out = 05   IR_Out = 3323  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 380 : Reset = 0   PC_Out = 05   IR_Out = 3323  State = 8  ALU A = 44a7  ALU B = 01b5 ALU Out = 465c
+# Time is 400 : Reset = 0   PC_Out = 05   IR_Out = 3323  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 420 : Reset = 0   PC_Out = 06   IR_Out = 24d2  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 440 : Reset = 0   PC_Out = 06   IR_Out = 24d2  State = 5  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 460 : Reset = 0   PC_Out = 06   IR_Out = 24d2  State = 6  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 480 : Reset = 0   PC_Out = 06   IR_Out = 24d2  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 500 : Reset = 0   PC_Out = 07   IR_Out = 4323  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 520 : Reset = 0   PC_Out = 07   IR_Out = 4323  State = 9  ALU A = 465c  ALU B = a040 ALU Out = a61c
+# Time is 540 : Reset = 0   PC_Out = 07   IR_Out = 4323  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 560 : Reset = 0   PC_Out = 08   IR_Out = 13ef  State = 2  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# Time is 580 : Reset = 0   PC_Out = 08   IR_Out = 13ef  State = 7  ALU A = a61c  ALU B = xxxx ALU Out = 0000
+# Time is 600 : Reset = 0   PC_Out = 08   IR_Out = 13ef  State = 1  ALU A = xxxx  ALU B = xxxx ALU Out = 0000
+# 
+# End of Simulation.
+# 
+# ** Note: $stop    : ./Processor.sv(76)
+#    Time: 620 ps  Iteration: 2  Instance: /Processor_tb
+# Break in Module Processor_tb at ./Processor.sv line 76
+# 
+# View the entire wave display
+# wave zoomfull
+# 0 ps
+# 651 ps
+# 
+# End
+quit -sim
+# End time: 14:30:38 on Jun 07,2022, Elapsed time: 0:01:03
+# Errors: 0, Warnings: 2

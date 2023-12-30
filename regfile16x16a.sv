@@ -1,0 +1,87 @@
+//Thomas Halford/Kader Khafif, TCES 330
+//Spring 2022, 05/31/2022
+//Final Project
+//Module that implements a 16x16 register file
+
+module regfile16x16a(clk, WriteEnable, WAddr, WData, RAddrA, RDataA, RAddrB, RDataB);
+
+	input clk; // system clock
+	input WriteEnable; // write enable
+	input [3:0] WAddr; // write address
+	input [15:0] WData; // write data
+	input [3:0] RAddrA; // A-side read address
+	input [3:0] RAddrB; // B-side read address
+
+	output [15:0] RDataA; // A-side read data
+	output [15:0] RDataB; // B-side read data
+	
+	logic [15:0] regfile [0:15]; // the registers
+
+	// read the registers
+	assign RDataA = regfile[RAddrA];
+	assign RDataB = regfile[RAddrB];
+
+	always @(posedge clk) begin
+		
+	//write the data to the register file in the index specified by the address
+	if (WriteEnable) regfile[WAddr] <= WData;
+
+	end
+
+	endmodule
+
+//Testbench
+module regfile16x16a_tb();
+
+	logic clk, WriteEnable; 
+	logic [3:0] WAddr, RAddrA, RAddrB;
+	logic [15:0] WData; 
+	logic [15:0] RDataA; 
+	logic [15:0] RDataB;
+	logic [15:0] regfile [0:15];
+	
+	//instantiation of the register file
+	regfile16x16a REG(clk, WriteEnable, WAddr, WData, RAddrA, RDataA, RAddrB, RDataB);
+
+	always begin 
+	
+	//20 ns clock period
+	clk = 0; #10;
+	clk = 1; #10;	
+
+	end
+
+	initial begin
+	
+	WriteEnable = 1;
+		
+	$display(" writing data to registers...\n");
+	
+	//writes a random value to each of the 16 registers in the file
+	for (int i = 0; i < 16; i++) begin 
+
+		WData = $random;
+		WAddr = i;
+		#20;
+		$display($time,,,WriteEnable,,,WData,,,WAddr,,,REG.regfile[WAddr]);
+	end
+	
+	WriteEnable = 0;	
+	$display("\n reading data from registers...\n");
+	
+	//reads values for A and B from a random address 
+	for(int i = 0; i < 16; i++) begin 
+
+		RAddrA = $random;
+		RAddrB = $random;
+		#20;
+		$display($time,,,RAddrA,,,RAddrB,,,RDataA,,,RDataB);
+	end
+
+	$stop;
+
+	end
+	
+endmodule
+
+

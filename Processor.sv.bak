@@ -1,0 +1,85 @@
+//Thomas Halford/Kader Khafif, TCES 330
+//Spring 2022, 05/31/2022
+//Final Project
+//Module that connects the datapath and 
+//control unit to create the processor
+
+module Processor(Clk, Reset, IR_Out, PC_Out, State, NextState, ALU_A, ALU_B, ALU_Out);
+
+	input Clk; // processor clock
+	input Reset; // system reset
+	output [15:0] IR_Out; // Instruction register
+	output [7:0] PC_Out; // Program counter
+	output [3:0] State; // FSM current state
+	output [3:0] NextState; // FSM next state (or 0 if you don?t use one)
+	output [15:0] ALU_A; // ALU A-Side Input
+	output [15:0] ALU_B; // ALU B-Side Input
+	output [15:0] ALU_Out; // ALU current output
+
+	wire [7:0] D_Addr; // Data memory address
+	wire [6:0] PC_Out7; // PC counting output of CU 
+	wire [3:0] RF_Ra_Addr; // Register file A-address
+	wire [3:0] RF_Rb_Addr; // Register file B-address
+	wire [3:0] RF_W_Addr; // Address being written to in RF
+	wire [3:0] InNextState; //Output wire of CU for the Next State
+	wire [3:0] InState; //Output wire of CU for the Current State
+   	wire [2:0] ALU_s0; // ALU function select
+	wire D_wr; // Data memory write enable
+	wire RF_W_en; // Register file write enable
+	wire RF_s;	
+	
+	//datapath(Clk, DAddr, DWrite, 	RFSelect, WriteAddr, RFWriteEnable, ReadAddrA,
+	//ReadAddrB, ALUSelect, ALUinA, ALUinB, ALUout); 
+
+	datapath Stage0(Clk, D_Addr, D_wr, RF_s, RF_W_Addr, RF_W_en, RF_Ra_Addr,
+	RF_Rb_Addr, ALU_s0, ALU_A, ALU_B, ALU_Out); 
+
+	// CU(Clk,Reset, ALU_s0, OutState, D_Addr, D_wr, NextState, RF_Ra_Addr, 
+	//						RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en, IR_Out, PC_Out);
+	CU Stage1(Clk,Reset, ALU_s0, InState, D_Addr, D_wr, InNextState, RF_Ra_Addr, 
+							RF_Rb_Addr, RF_s, RF_W_Addr, RF_W_en, IR_Out, PC_Out7);
+
+	assign PC_Out = {1'b0, PC_Out7}; //Extends the 7-bit PC_Out from the CU to 8 bits
+	assign State = InState; //Assigns the output current state of the processor to the output of the CU
+ 	assign NextState = InNextState; //Assigns the next state of the processor to the output of the CU
+
+endmodule
+
+// Testbench  for the programmable processor
+
+`timescale 1 ps / 1 ps
+module Processor_tb;
+ 
+  logic Clk;             // system clock
+  logic Reset;           // system reset
+  logic [15:0] IR_Out;   // instruction register
+  logic [7:0] PC_Out;    // program counter
+  logic [3:0] State, NextState;        // state machine state, next state
+  logic [15:0] ALU_A, ALU_B, ALU_Out;  // ALU inputs and output 
+
+  Processor DUT(Clk, Reset, IR_Out, PC_Out, State, NextState, ALU_A, ALU_B, ALU_Out);
+
+  // generate 50 MHz clock
+ always begin
+	Clk = 1; #10;
+	Clk = 0; #10;
+  end
+
+initial begin //Test stimulus
+
+	   $display("\nBegin Simulation.");
+      Reset = 1;         // reset for one clock
+      @(posedge Clk) 
+      #10 Reset = 0;
+      wait(IR_Out == 16'h5000);  // halt instruction
+      $display("\nEnd of Simulation.\n");
+      $stop;
+
+end
+  
+initial $monitor("Time is %0t : Reset = %b   PC_Out = %h   IR_Out = %h  State = %h  ALU A = %h  ALU B = %h ALU Out = %h", $stime, Reset, PC_Out, IR_Out, State, ALU_A, ALU_B, ALU_Out);
+
+endmodule   
+                           
+
+

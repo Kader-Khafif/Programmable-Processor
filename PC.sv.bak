@@ -1,0 +1,27 @@
+//Thomas Halford/Kader Khafif, TCES 330
+//Spring 2022, 05/31/2022
+//Final Project
+//This module defines the 7-Bits Counter that count 
+//from 0 to 127 and then repeat 
+
+
+module PC( Clk, Clr, Up, Addr );
+	parameter N = 7;
+	input Clk, Clr, Up; // input Clock, clear and enable
+	output logic[N-1:0] Addr;
+
+	// using always block with if-else statement 
+	always_ff @ ( posedge Clk ) begin
+
+			if ( Clr ) begin
+			Addr <= 0; // reset when clear signal equal 1
+		end
+		else if ( Up ) begin
+			Addr <= Addr + Up; // increment by 1 when enable signal equal 1
+			if ( Addr == 7'd127) begin
+				Addr <= 0;
+			end
+		end
+	end
+	
+endmodule

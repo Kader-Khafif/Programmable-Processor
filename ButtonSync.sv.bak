@@ -1,0 +1,73 @@
+module ButtonSync(Bi, Clk, Bo);
+
+	input Bi, Clk;
+	output Bo;
+
+	logic [1:0] Q;
+	logic Bi_wire;
+	logic [1:0] NextState, CurrentState;
+
+	assign Bi_wire = Q[0];
+
+	localparam A = 2'b00,
+		   B = 2'b01, 
+		   C = 2'b10,
+		   Unused = 2'b11;
+
+	always_comb begin
+
+	case(CurrentState)
+
+	A : if(Bi_wire) NextState = B;
+	else NextState = A;
+	
+	B : if(Bi_wire) NextState = C;
+	else NextState = A;
+
+	C : if(Bi_wire) NextState = C;
+	else NextState = A;
+
+	default : NextState = A;
+	
+	endcase
+
+	end
+	
+	assign Bo = (CurrentState == B);
+
+	always_ff (posedge Clk) begin
+
+	Q[1] <= Bi;
+	Q[0] <= Q[1];
+
+	end
+
+endmodule
+
+module ButtonSync_tb();
+
+	logic Bi, Clk;
+	logic Bo;
+
+	//ButtonSync(Bi, Clk, Bo);
+	ButtonSync BS(Bi, Clk, Bo);
+
+	always begin
+
+	Clk = 1'b0;
+	Clk = 1'b1;
+
+	end
+
+	initial begin
+
+	Bi = 1'b1; #100;
+	Bi = 1'b0; #40;
+	Bi = 1'b1; #60;
+
+	end
+
+	initial $monitor($time,,,Bi,,,BS.CurrentState,,,BS.NextState,,,Bo);
+
+endmodule
+
